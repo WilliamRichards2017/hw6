@@ -9,7 +9,7 @@
       <div class="flex-row">
         <BubbleChart :words="words">
         </BubbleChart>
-        <Table :words="words"></Table>
+        <!--<Table :words="words"></Table>-->
       </div>
 
     </div>

@@ -20,31 +20,44 @@
                 margin: {top: 40, right: 40, bottom: 40, left: 40},
 
 
+                colorDict: {
+                    "education": "green",
+                    "economy/fiscal issues" : "red",
+                    "crime/justice" : "blue",
+                    "mental health/substance abuse" : "purple",
+                    "health care" : "pink",
+                    "energy/environment":  "magenta",
+                },
+
+                yDict: {
+                    "education": 0,
+                    "economy/fiscal issues" : 100,
+                    "crime/justice" : 200,
+                    "mental health/substance abuse" : 300,
+                    "health care" : 400,
+                    "energy/environment":  500,
+                }
+
+
+
             }
         },
 
         methods: {
             categoryToColor(category){
-                if(category === "education"){
-                    return "green";
-                }
-                else if(category === "economy/fiscal issues"){
-                    return "red";
-                }
-                else if(category === "crime/justice"){
-                    return "blue";
-                }
-                else if(category === "energy"){
-                    return "yellow";
-                }
-                else{
-                    return "grey";
-                }
+
+            if(this.colorDict.hasOwnProperty(category)){
+                return this.colorDict[category];
+            }
+            return "grey";
+
           },
 
             buildBubbleChart() {
 
-                let data = this.words;
+                let self = this;
+
+                let data = self.words;
 
 
 
@@ -65,8 +78,6 @@
 
 
 
-
-
                 let svg = d3.select('#bubbleChart > svg');
 
 
@@ -77,12 +88,12 @@
                     .attr('r', d => radiusScale(d.total))
                     .attr('cx', function(d) {
                         console.log("d", d.category);
-                        return d.sourceX;
+                        return d.moveX;
                     })
                     .attr('cy', function(d) {
-                        return d.sourceY + 200;
+                        return d.moveY + 100;
                     })
-                    .style("fill", d => this.categoryToColor(d.category));
+                    .style("fill", d => self.categoryToColor(d.category));
 
                 // var simulation = d3.forceSimulation(data)
                 //     .force('charge', d3.forceManyBody().strength(1))

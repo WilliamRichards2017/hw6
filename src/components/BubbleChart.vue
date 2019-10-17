@@ -83,21 +83,30 @@
             buildBubbleChart() {
 
                 let self = this;
-                let data = self.words;
+                let data = this.words;
+
+                let maxTotal = d3.max(data, function(d) { return +d.total;} );
+                let minTotal = d3.max(data, function(d) { return -d.total;} );
+                console.log("maxTotal", maxTotal);
+                console.log("minTotal", minTotal);
+
+                let radiusScale = d3.scaleLinear()
+                    .domain([minTotal, maxTotal])
+                    .range([1, 12]);
 
 
                 d3.select('#bubbleChart > svg')
                     .selectAll('circle')
                     .data(data)
                     .join('circle')
-                    .attr('cx', function (d) {
-                        console.log("d", d.category);
+                    .attr('r', d => radiusScale(d.total))
+
+                        .attr('cx', function (d) {
                         return d.sourceX;
                     })
                     .attr('cy', function (d) {
                         return d.sourceY + 100;
                     })
-                    .attr('r', d => self.radiusScale(d.total))
                     .style("fill", d => self.colorDict[d.category]);
 
             },

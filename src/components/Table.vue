@@ -87,7 +87,8 @@
                 total.join("text")
                     .text(d => d.val);
 
-                let freqWidth = 100;
+                let freqWidth = 100
+                let percentWidth = 200;
 
 
 
@@ -96,10 +97,19 @@
                     .attr("width", freqWidth)
                     .attr("height", 25);
 
+                let percentSvgs = percent.append("svg")
+                    .attr("class", "chart")
+                    .attr("width", percentWidth)
+                    .attr("height", 25);
+
 
                 let freqScale = d3.scaleLinear()
                     .domain([0, 1])
                     .range([10, freqWidth-10]);
+
+                let percentScale = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([10, percentWidth-10]);
 
                 let barHeight = 20;
 
@@ -108,6 +118,19 @@
                     .attr("width", d => freqScale(d.val[0]/50))
                     .attr("height", barHeight)
                     .style("fill", d => this.categoryToColor(d.val[1]))
+
+                percentSvgs.append("rect")
+                    .attr("width", d => percentScale(d.val[1]))
+                    .attr("height", barHeight)
+                    .attr("x", percentWidth/2)
+                    .style("fill", "blue");
+
+                percentSvgs.append("rect")
+                    .attr("width", d => percentScale(d.val[0]))
+                    .attr("height", barHeight)
+                    .attr("x",d => (percentWidth/2) - percentScale(d.val[0]))
+                    .style("fill", "red");
+
 
 
 

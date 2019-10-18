@@ -4,8 +4,8 @@
 
 
         <button v-on:click="separate = !separate"></button>
-
-        <svg width="1000" height="1000"></svg>
+<br>
+        <svg width="800" height="1000"></svg>
 
 
     </div>

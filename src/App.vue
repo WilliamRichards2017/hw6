@@ -6,10 +6,10 @@
         <div>Name: Will Richards; E-Mail: richardsw2017@gmail.com; UID: u0401321</div>
       </header>
 
-      <div class="flex-row">
+      <div class="flexRow">
         <BubbleChart :words="words">
         </BubbleChart>
-        <!--<Table :words="words"></Table>-->
+        <Table :words="words"></Table>
       </div>
 
     </div>
@@ -38,6 +38,10 @@ export default {
 </script>
 
 <style>
+
+  .flexRow{
+    display: flex;
+  }
 </style>
 
 

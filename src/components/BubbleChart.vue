@@ -143,6 +143,10 @@
                 } else {
                     this.buildBubbleChart();
                 }
+            },
+
+            words: function(){
+
             }
         },
 

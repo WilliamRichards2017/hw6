@@ -4,10 +4,13 @@
       <header>
         <h1>The State of the State of the States</h1>
         <div>Name: Will Richards; E-Mail: richardsw2017@gmail.com; UID: u0401321</div>
+
+        <button v-on:click="separate = !separate"></button>
+
       </header>
 
       <div class="flexRow">
-        <BubbleChart :words="words">
+        <BubbleChart :words="words" :brushedWords="brushedWords" :seperate="seperate">
         </BubbleChart>
         <Table :words="brushedWords"></Table>
       </div>
@@ -33,6 +36,7 @@ export default {
   data() { return {
     words: Words,
     brushedWords: Words,
+    seperate: false,
     }
   },
   methods : {
@@ -60,7 +64,7 @@ export default {
       let self = this;
       console.log("this.words", self.words)
 
-      this.brushedWords = [];
+      self.brushedWords = [];
 
       // console.log("this.words", this.words);
 
@@ -73,6 +77,7 @@ export default {
       console.log("selection", s);
 
 
+
       let x1 = s[0][0];
       let y1 = s[0][1];
 
@@ -83,13 +88,17 @@ export default {
 
       for(let i = 0; i < clonedWords.length; i++){
 
-        let x = clonedWords[i].sourceX;
-        let y = clonedWords[i].sourceY + yOffset;
+        let x = null;
+        let y = null;
 
-        //
-        // console.log("x, y", x, y);
-        // console.log("x1, y1", x1, y1);
-        // console.log("x2, y2,", x2, y2);
+        if(!self.separate){
+          x = clonedWords[i].sourceX;
+          y = clonedWords[i].sourceY + yOffset;
+        }
+        else if(self.separate){
+          x = clonedWords[i].moveX;
+          y = clonedWords[i].moveY + yOffset;
+        }
 
         if(x > x1 && x < x2 && y > y1 && y < y2){
           this.brushedWords.push(clonedWords[i]);

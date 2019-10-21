@@ -3,8 +3,6 @@
 
 
 
-        <button v-on:click="separate = !separate"></button>
-<br>
         <svg width="800" height="1000"></svg>
 
 
@@ -17,14 +15,14 @@
     export default {
         name: 'BubbleChart',
         props: {
-            words: null
+            words: null,
+            brushedWords: null,
+            separate: null,
         },
 
         data() {
             return {
                 margin: {top: 40, right: 40, bottom: 40, left: 40},
-
-                separate: false,
 
                 minTotal: null,
                 maxTotal: null,
@@ -39,17 +37,6 @@
                     "health care": "pink",
                     "energy/environment": "magenta",
                 },
-
-                yDict: {
-                    "education": 0,
-                    "economy/fiscal issues": 100,
-                    "crime/justice": 200,
-                    "mental health/substance abuse": 300,
-                    "health care": 400,
-                    "energy/environment": 500,
-                }
-
-
             }
         },
 
@@ -130,6 +117,33 @@
                     .style("fill", d => self.categoryToColor(d.category));
             },
 
+            highlightBrushedNodes(){
+                let nodes = d3.select("#bubbleChart").selectAll("circle");
+
+                console.log("brushedWords", brushedWords);
+
+                let brushedPhrases = [];
+
+                for(let i = 0; i < this.brushedWords.length; i++){
+                    brushedPhrases.push(this.brushedWords[i].phrase);
+                }
+
+                let nonBrushed = td.filter((d) => {
+                    return brushedPhrases.contains(d.phrase);
+                });
+
+                let brushed = td.filter((d) => {
+                    return !brushedPhrases.contains(d.phrase);
+                });
+
+                console.log("nonBrushed", nonBrushed);
+
+                nonBrushed.classed("nonBrushed", true);
+
+                brushed.classed("nonBrushed", false);
+
+            }
+
 
         },
 
@@ -145,8 +159,8 @@
                 }
             },
 
-            words: function(){
-
+            brushedWords: function(){
+                this.highlightBrushedNodes();
             }
         },
 
@@ -161,6 +175,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+    .nonBrushed{
+        fill: grey;
+    }
 
 </style>
 

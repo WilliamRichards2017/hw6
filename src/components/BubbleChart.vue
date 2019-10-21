@@ -50,6 +50,8 @@
 
             },
 
+
+
             initScales() {
 
                 let self = this;
@@ -74,8 +76,7 @@
 
                 let maxTotal = d3.max(data, function(d) { return +d.total;} );
                 let minTotal = d3.max(data, function(d) { return -d.total;} );
-                console.log("maxTotal", maxTotal);
-                console.log("minTotal", minTotal);
+
 
                 let radiusScale = d3.scaleLinear()
                     .domain([minTotal, maxTotal])
@@ -94,7 +95,7 @@
                     .attr('cy', function (d) {
                         return d.sourceY + 100;
                     })
-                    .style("fill", d => self.colorDict[d.category]);
+                    .style("fill", d => self.colorDict[d.category])
 
             },
 
@@ -108,7 +109,6 @@
                     .data(data)
                     .join('circle')
                     .attr('cx', function (d) {
-                        console.log("d", d.category);
                         return d.moveX;
                     })
                     .attr('cy', function (d) {
@@ -118,9 +118,9 @@
             },
 
             highlightBrushedNodes(){
+                let self = this;
                 let nodes = d3.select("#bubbleChart").selectAll("circle");
 
-                console.log("brushedWords", brushedWords);
 
                 let brushedPhrases = [];
 
@@ -128,19 +128,19 @@
                     brushedPhrases.push(this.brushedWords[i].phrase);
                 }
 
-                let nonBrushed = td.filter((d) => {
-                    return brushedPhrases.contains(d.phrase);
+                let nonBrushed = nodes.filter((d) => {
+                    return !brushedPhrases.includes(d.phrase);
                 });
 
-                let brushed = td.filter((d) => {
-                    return !brushedPhrases.contains(d.phrase);
+                let brushed = nodes.filter((d) => {
+                    return brushedPhrases.includes(d.phrase);
                 });
 
-                console.log("nonBrushed", nonBrushed);
 
-                nonBrushed.classed("nonBrushed", true);
+                nonBrushed.style("fill", "grey");
 
-                brushed.classed("nonBrushed", false);
+                brushed.style("fill", d => self.categoryToColor(d.category));
+
 
             }
 
@@ -176,8 +176,9 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-    .nonBrushed{
-        fill: grey;
+    .nb{
+
+        fill: grey !important;
     }
 
 </style>

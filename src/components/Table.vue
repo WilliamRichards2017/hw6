@@ -174,8 +174,6 @@
             },
 
             sortBy(type){
-                console.log("sorting by", type);
-
 
                     let preSort = this.words.slice(0);
 
@@ -215,8 +213,6 @@
                         /* WARNING: arrays must not contain {objects} or behavior may be undefined */
                         return JSON.stringify(a1) == JSON.stringify(a2);
                     }
-
-                    console.log("sorted words", this.words);
 
                     if (arrEq(preSort, this.words)) {
                         this.words.reverse();

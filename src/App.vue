@@ -37,6 +37,14 @@ export default {
     words: Words,
     brushedWords: Words,
     seperate: false,
+    colorDict: {
+      "education": "green",
+      "economy/fiscal issues": "red",
+      "crime/justice": "blue",
+      "mental health/substance abuse": "purple",
+      "health care": "pink",
+      "energy/environment": "magenta",
+    }
     }
   },
   methods : {
@@ -44,25 +52,20 @@ export default {
 
       // console.log("this.words", this.words);
       var brush = d3.brush()
-              .extent([[20, 20], [780, 980]]);
+              .extent([[20, 20], [780, 980]])
 
-      console.log("brush", brush);
 
       let svg = d3.select("#bubbleChart").selectAll('svg');
 
       svg
               .attr("class", "brush")
-              .call(d3.brush().on("brush", this.brushed));
-
-
-
+              .call(brush.on("brush", this.brushed))
+              .on("click", this.brushEnded)
 
     },
     brushed(){
 
-
       let self = this;
-      console.log("this.words", self.words)
 
       self.brushedWords = [];
 
@@ -70,13 +73,8 @@ export default {
 
       const clonedWords = self.words.slice();
 
-      console.log("clonedWords", clonedWords)
-
 
       var s = d3.event.selection;
-      console.log("selection", s);
-
-
 
       let x1 = s[0][0];
       let y1 = s[0][1];
@@ -102,11 +100,19 @@ export default {
 
         if(x > x1 && x < x2 && y > y1 && y < y2){
           this.brushedWords.push(clonedWords[i]);
-          console.log("true");
         }
       }
-      console.log("this.words after selection", this.brushedWords);
+    },
+    brushEnded(){
 
+      let self = this;
+      d3.select("#bubbleChart").selectAll("circle")
+              .style("fill", d => self.colorDict[d.category])
+
+
+      console.log("Words", Words);
+      self.words = Words;
+      self.brushedWords = Words;
     }
   },
   mounted() {

@@ -1,5 +1,5 @@
 <template>
-    <div id="table">
+    <div id="table" style="overflow-y: auto; overflow-x: hidden">
 
 
         <table>
@@ -260,6 +260,7 @@
         background: beige;
         margin: 5px;
     }
+
 
     text{
         font-size: 10px;

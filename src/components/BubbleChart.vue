@@ -4,7 +4,6 @@
         <div id="tooltip"></div>
 
 
-
         <svg width="800" height="1000"></svg>
 
 
@@ -20,6 +19,7 @@
             words: null,
             brushedWords: null,
             separate: null,
+            showExtremes: null,
         },
 
         data() {
@@ -181,6 +181,38 @@
         mounted() {
             this.initScales();
             this.buildBubbleChart();
+        },
+
+        watch: {
+            showExtremes: function(){
+
+                console.log("toggling extremes in bubbleChart");
+
+
+                if(this.showExtremes){
+                    d3.select("#bg")
+                        .style("opacity", 0.5);
+
+                   let fg =  d3.select("body").append("div")
+                       .attr("id", "fg")
+
+                   fg.append("text")
+                       .attr("width", 20)
+                       .attr("height", 20)
+                       .attr("x", 100)
+                       .attr("y", 100)
+                       .style("stroke", "black");
+
+                }
+                else{
+                    d3.select("#bg")
+                        .style("opacity", 1);
+
+                    d3.select("#fg")
+                        .remove();
+
+                }
+            }
         }
 
 
@@ -198,6 +230,18 @@
     #tooltip{
         /*background: white;*/
         opacity: 0.5;
+    }
+
+    #bubbleChart{
+        overflow: hidden;
+    }
+
+    #fg{
+        top: 0;
+        bottom: 0;
+        width: 500px;
+        height: 500px;
+        position: absolute;
     }
 
 </style>

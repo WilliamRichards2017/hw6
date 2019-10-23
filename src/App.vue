@@ -5,12 +5,14 @@
         <h1>The State of the State of the States</h1>
         <div>Name: Will Richards; E-Mail: richardsw2017@gmail.com; UID: u0401321</div>
 
-        <button v-on:click="separate = !separate"></button>
+        <button v-on:click="separate = !separate">Grouped by topic</button>
+        <button v-on:click="showExtremes = true"> Show Extremes</button>
+
 
       </header>
 
       <div class="flexRow">
-        <BubbleChart :words="words" :brushedWords="brushedWords" :seperate="seperate">
+        <BubbleChart :words="words" :brushedWords="brushedWords" :separate="separate">
         </BubbleChart>
         <Table :words="brushedWords"></Table>
       </div>
@@ -36,7 +38,8 @@ export default {
   data() { return {
     words: Words,
     brushedWords: Words,
-    seperate: false,
+    separate: false,
+    showExtremes: false,
     colorDict: {
       "education": "green",
       "economy/fiscal issues": "red",
@@ -52,23 +55,33 @@ export default {
 
       // console.log("this.words", this.words);
       var brush = d3.brush()
-              .extent([[20, 20], [780, 980]])
+              .extent([[0, 0], [800, 1000]])
+              .on("end", this.brushEnded)
+              .on("brush", this.brush)
+              .on("start", this.brushStart);
+
 
 
       let svg = d3.select("#bubbleChart").selectAll('svg');
 
       svg
               .attr("class", "brush")
-              .call(brush.on("brush", this.brushed))
-              .on("click", this.brushEnded)
+              .call(brush)
+
 
     },
-    brushed(){
+
+    brushStart(){
+
+      this.brushedWords = this.words;
+
+    },
+
+    brush(){
+
+      this.brushedWords = [];
 
       let self = this;
-
-      self.brushedWords = [];
-
       // console.log("this.words", this.words);
 
       const clonedWords = self.words.slice();
@@ -102,17 +115,69 @@ export default {
           this.brushedWords.push(clonedWords[i]);
         }
       }
+
+      if(this.brushedWords.length === 0){
+        console.log("null select on start");
+        this.brushedWords = this.words;
+      }
+
     },
     brushEnded(){
+      //
+      // let self = this;
+      // d3.select("#bubbleChart").selectAll("circle")
+      //         .style("fill", d => self.colorDict[d.category])
+      //
+      // self.words = Words;
+      // self.brushedWords = Words;
 
-      let self = this;
-      d3.select("#bubbleChart").selectAll("circle")
-              .style("fill", d => self.colorDict[d.category])
 
 
-      console.log("Words", Words);
-      self.words = Words;
-      self.brushedWords = Words;
+      // let self = this;
+      //
+      // if(this.brushedWords.length === 0 || this.brushedWords === this.words){
+      //   console.log("null on brush end");
+      //   this.brushedWords = this.words;
+      // }
+      //
+      // // self.brushedWords = self.words;
+      //
+      // // console.log("this.words", this.words);
+      //
+      // const clonedWords = self.words.slice();
+
+
+      // var s = d3.brushSelection(this);
+      //
+      // console.log("s", s);
+      //
+      // let x1 = s[0][0];
+      // let y1 = s[0][1];
+      //
+      // let x2 = s[1][0];
+      // let y2 = s[1][1];
+      //
+      // let yOffset = 100;
+      //
+      // for(let i = 0; i < clonedWords.length; i++){
+      //
+      //   let x = null;
+      //   let y = null;
+      //
+      //   if(!self.separate){
+      //     x = clonedWords[i].sourceX;
+      //     y = clonedWords[i].sourceY + yOffset;
+      //   }
+      //   else if(self.separate){
+      //     x = clonedWords[i].moveX;
+      //     y = clonedWords[i].moveY + yOffset;
+      //   }
+      //
+      //   if(x > x1 && x < x2 && y > y1 && y < y2){
+      //     this.brushedWords.push(clonedWords[i]);
+      //   }
+      // }
+
     }
   },
   mounted() {

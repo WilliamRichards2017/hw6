@@ -1,6 +1,8 @@
 <template>
     <div id="bubbleChart">
 
+        <div id="tooltip"></div>
+
 
 
         <svg width="800" height="1000"></svg>
@@ -82,6 +84,15 @@
                     .domain([minTotal, maxTotal])
                     .range([1, 12]);
 
+                var tooltip = d3.select("#tooltip")
+                    .style("position", "absolute")
+                    .style("z-index", "10")
+                    .style("visibility", "hidden")
+                    .style("background", "#000")
+                    .style("width", "100px")
+                    .style("height", "100px");
+
+
 
                 d3.select('#bubbleChart > svg')
                     .selectAll('circle')
@@ -96,6 +107,10 @@
                         return d.sourceY + 100;
                     })
                     .style("fill", d => self.colorDict[d.category])
+                    .on("mouseover", function(d){tooltip.text(d); return tooltip.style("visibility", "visible");})
+                    .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+                    .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
 
             },
 
@@ -106,8 +121,7 @@
 
                 d3.select('#bubbleChart > svg')
                     .selectAll('circle')
-                    .data(data)
-                    .join('circle')
+                    .transition().duration(1000)
                     .attr('cx', function (d) {
                         return d.moveX;
                     })
@@ -179,6 +193,11 @@
     .nb{
 
         fill: grey !important;
+    }
+
+    #tooltip{
+        /*background: white;*/
+        opacity: 0.5;
     }
 
 </style>

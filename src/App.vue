@@ -6,7 +6,7 @@
         <h1>The State of the State of the States</h1>
         <div>Name: Will Richards; E-Mail: richardsw2017@gmail.com; UID: u0401321</div>
 
-        <button v-on:click="separate = !separate">Grouped by topic</button>
+        <button v-on:click="toggleSeparate">Grouped by topic</button>
         <button v-on:click="toggleExtremes"> Show Extremes</button>
 
 
@@ -55,6 +55,10 @@ export default {
 
     te(){
       this.showExtremes = !this.showExtremes;
+    },
+
+    ts(){
+      this.separate = !this.separate;
 
     },
 
@@ -64,6 +68,14 @@ export default {
       setTimeout(this.te, 100);
 
        console.log("toggling extremes in app", this.showExtremes);
+    },
+
+    toggleSeparate(){
+
+      console.log("toggling separate");
+
+      setTimeout(this.ts, 100);
+
     },
 
     initBrush(){
@@ -77,11 +89,10 @@ export default {
 
 
 
-      let svg = d3.select("#bubbleChart").selectAll('svg');
-
-      svg
+      let svg = d3.select("#bubbleSvg")
               .attr("class", "brush")
-              .call(brush)
+              .call(brush);
+
 
 
     },

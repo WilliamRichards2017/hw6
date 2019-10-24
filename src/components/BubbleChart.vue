@@ -4,7 +4,7 @@
         <div id="tooltip"></div>
 
 
-        <svg width="800" height="1000"></svg>
+        <svg width="800" height="1000" id="bubbleSvg"></svg>
 
 
     </div>
@@ -73,6 +73,9 @@
 
             buildBubbleChart() {
 
+                console.log("this.seperate in bubble chart", this.separate);
+
+
                 let self = this;
                 let data = this.words;
 
@@ -86,7 +89,7 @@
 
                 var tooltip = d3.select("#tooltip")
                     .style("position", "absolute")
-                    .style("z-index", "10")
+                    .style("z-index", "3000")
                     .style("visibility", "hidden")
                     .style("background", "#000")
                     .style("width", "100px")
@@ -94,27 +97,43 @@
 
 
 
-                d3.select('#bubbleChart > svg')
+                let circles = d3.select('#bubbleChart > svg')
                     .selectAll('circle')
+
                     .data(data)
                     .join('circle')
-                    .attr('r', d => radiusScale(d.total))
 
-                        .attr('cx', function (d) {
+                    .attr('r', d => radiusScale(d.total))
+                    .style("fill", d => self.colorDict[d.category])
+                    .style("z-axis", 0.01)
+                    .on("mouseover", this.mouseStart)
+                    .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+                    .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
+                circles.transition().duration(1000)
+
+                    .attr('cx', function (d) {
                         return d.sourceX;
                     })
                     .attr('cy', function (d) {
                         return d.sourceY + 100;
                     })
-                    .style("fill", d => self.colorDict[d.category])
-                    .on("mouseover", function(d){tooltip.text(d); return tooltip.style("visibility", "visible");})
-                    .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
-                    .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
 
 
             },
 
+            mouseStart(){
+
+                console.log("mousestart hover detected");
+
+                d3.select("#tooltip").text("uhh ohh")
+                    .style("visibility", "visible");
+            },
+
             separateBubbleChart() {
+
+                console.log("this.seperate in bubble chart", this.separate);
 
                 let self = this;
                 let data = self.words;
@@ -161,10 +180,16 @@
 
         },
 
+        mounted() {
+            this.initScales();
+            this.buildBubbleChart();
+        },
 
         watch: {
 
             separate: function () {
+
+                console.log("sperate inside watcher");
 
                 if (this.separate) {
                     this.separateBubbleChart();
@@ -175,15 +200,8 @@
 
             brushedWords: function(){
                 this.highlightBrushedNodes();
-            }
-        },
+            },
 
-        mounted() {
-            this.initScales();
-            this.buildBubbleChart();
-        },
-
-        watch: {
             showExtremes: function(){
 
                 console.log("toggling extremes in bubbleChart");
@@ -193,15 +211,33 @@
                     d3.select("#bg")
                         .style("opacity", 0.5);
 
-                   let fg =  d3.select("body").append("div")
+                   let fg =  d3.select("#app").append("div")
                        .attr("id", "fg")
+                       .style("top", 0)
+                       .style("left", 0)
+                       .style("width", "500px")
+                       .style("height", "500px")
+                       .style("position", "absolute");
 
-                   fg.append("text")
-                       .attr("width", 20)
+
+                  let svg = fg.append("svg")
+                       .attr("width", "1000px")
+                       .attr("height", "1000px");
+
+
+                   svg.append("text")
+                       .attr("width", 50)
                        .attr("height", 20)
-                       .attr("x", 100)
-                       .attr("y", 100)
-                       .style("stroke", "black");
+                       .attr("x", 50)
+                       .attr("y", 300)
+                        .text("Dems are left")
+
+                    svg.append("text")
+                        .attr("width", 50)
+                        .attr("height", 20)
+                        .attr("x", 400)
+                        .attr("y", 400)
+                        .text("Reps are right");
 
                 }
                 else{

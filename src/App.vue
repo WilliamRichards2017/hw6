@@ -46,7 +46,7 @@ export default {
       "economy/fiscal issues": "red",
       "crime/justice": "blue",
       "mental health/substance abuse": "purple",
-      "health care": "pink",
+      "health care": "orange",
       "energy/environment": "magenta",
     }
     }
@@ -113,6 +113,8 @@ export default {
       const clonedWords = self.words.slice();
 
 
+
+
       var s = d3.event.selection;
 
       let x1 = s[0][0];
@@ -171,20 +173,6 @@ export default {
     display: flex;
   }
 
-
-  #ff1{
-    width: 100px;
-    height: 100px;
-    top: 100px;
-    right: 200px;
-  }
-
-  #ff2{
-    width: 100px;
-    height: 100px;
-    top: 400px;
-    right: 600px;
-  }
 
 </style>
 
